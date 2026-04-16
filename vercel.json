@@ -1,12 +1,4 @@
 {
-  "functions": {
-    "app/api/events/route.ts": {
-      "maxDuration": 15
-    },
-    "app/api/articles/route.ts": {
-      "maxDuration": 10
-    }
-  },
   "headers": [
     {
       "source": "/api/(.*)",

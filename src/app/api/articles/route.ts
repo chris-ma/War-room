@@ -4,6 +4,8 @@ import { fetchNewsApiArticles } from '@/lib/newsapi';
 import { cacheGet, cacheSet } from '@/lib/cache';
 import type { EnrichedArticle, ArticlesApiResponse } from '@/types/event';
 
+export const maxDuration = 10;
+
 const CACHE_TTL_MS = 120_000;
 
 export async function GET(req: NextRequest) {

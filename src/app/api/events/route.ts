@@ -4,6 +4,8 @@ import { clusterArticles } from '@/lib/clustering';
 import { cacheGet, cacheSet, cacheGetStale } from '@/lib/cache';
 import type { EventsApiResponse } from '@/types/event';
 
+export const maxDuration = 15;
+
 const CACHE_TTL_MS = 60_000;
 
 export async function GET(req: NextRequest) {
