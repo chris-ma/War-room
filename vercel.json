@@ -1,9 +1,9 @@
 {
   "functions": {
-    "src/app/api/events/route.ts": {
+    "app/api/events/route.ts": {
       "maxDuration": 15
     },
-    "src/app/api/articles/route.ts": {
+    "app/api/articles/route.ts": {
       "maxDuration": 10
     }
   },
