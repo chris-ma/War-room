@@ -9,7 +9,8 @@ export type DisasterSubtype =
   | 'landslide'
   | 'tsunami'
   | 'severe_storm'
-  | 'drought';
+  | 'drought'
+  | 'epidemic';
 
 export interface DisasterEvent {
   id: string;
@@ -21,7 +22,7 @@ export interface DisasterEvent {
   magnitude?: number;
   magnitudeUnit?: string;
   alertLevel?: 'green' | 'yellow' | 'orange' | 'red';
-  source: 'usgs' | 'eonet';
+  source: 'usgs' | 'eonet' | 'gdelt';
   url?: string;
   country?: string;
   depth?: number;        // km, earthquakes only
@@ -44,6 +45,7 @@ export const DISASTER_CONFIG: Record<DisasterSubtype, { color: string; emoji: st
   tsunami:      { color: '#1d4ed8', emoji: '🌊', label: 'Tsunami' },
   severe_storm: { color: '#6b7280', emoji: '⛈️', label: 'Severe Storm' },
   drought:      { color: '#d97706', emoji: '☀️', label: 'Drought' },
+  epidemic:     { color: '#22c55e', emoji: '🦠', label: 'Epidemic/Outbreak' },
 };
 
 export type ActiveLayer = 'conflict' | 'disaster' | 'both';

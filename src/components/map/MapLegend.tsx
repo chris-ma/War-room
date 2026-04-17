@@ -12,7 +12,7 @@ const CONFLICT_STATES = [
 ];
 
 const DISASTER_TYPES: DisasterSubtype[] = [
-  'earthquake', 'wildfire', 'flood', 'cyclone', 'volcano', 'severe_storm', 'landslide',
+  'earthquake', 'wildfire', 'flood', 'cyclone', 'volcano', 'severe_storm', 'landslide', 'epidemic',
 ];
 
 export default function MapLegend({ activeLayer }: { activeLayer: ActiveLayer }) {
