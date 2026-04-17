@@ -1,14 +1,18 @@
 'use client';
 
 import type { FilterState, TimeRange } from '@/types/filters';
+import type { ActiveLayer } from '@/types/disaster';
 import SearchInput from './SearchInput';
 import TimeRangeSelector from './TimeRangeSelector';
+import LayerToggle from './LayerToggle';
 import Spinner from '@/components/ui/Spinner';
 
 interface TopBarProps {
   filters: FilterState;
   onQueryChange: (q: string) => void;
   onTimeRangeChange: (t: TimeRange) => void;
+  activeLayer: ActiveLayer;
+  onLayerChange: (l: ActiveLayer) => void;
   eventCount: number;
   lastUpdated: Date | null;
   isLoading: boolean;
@@ -23,6 +27,8 @@ export default function TopBar({
   filters,
   onQueryChange,
   onTimeRangeChange,
+  activeLayer,
+  onLayerChange,
   eventCount,
   lastUpdated,
   isLoading,
@@ -38,11 +44,18 @@ export default function TopBar({
 
       <div className="h-4 w-px bg-border hidden sm:block" />
 
+      {/* Layer toggle */}
+      <LayerToggle value={activeLayer} onChange={onLayerChange} />
+
+      <div className="h-4 w-px bg-border hidden sm:block" />
+
       {/* Search */}
       <SearchInput value={filters.query} onChange={onQueryChange} />
 
-      {/* Time range */}
-      <TimeRangeSelector value={filters.timeRange} onChange={onTimeRangeChange} />
+      {/* Time range — only relevant for conflict layer */}
+      {activeLayer !== 'disaster' && (
+        <TimeRangeSelector value={filters.timeRange} onChange={onTimeRangeChange} />
+      )}
 
       {/* Spacer */}
       <div className="flex-1" />

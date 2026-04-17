@@ -198,3 +198,62 @@ body {
 .marker-cluster span {
   line-height: 30px;
 }
+
+/* ── Disaster markers (diamond shape) ── */
+@keyframes disaster-pulse-ring {
+  0%   { transform: scale(0.8) rotate(45deg); opacity: 0.8; }
+  70%  { transform: scale(2.8) rotate(45deg); opacity: 0; }
+  100% { transform: scale(2.8) rotate(45deg); opacity: 0; }
+}
+
+.disaster-marker {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.disaster-ring {
+  position: absolute;
+  inset: 4px;
+  border-radius: 3px;
+  transform: rotate(45deg);
+  border: 2px solid var(--disaster-color, #8b5cf6);
+  z-index: 1;
+}
+
+.disaster-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 3px;
+  transform: rotate(45deg);
+  background: var(--disaster-color, #8b5cf6);
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: white;
+  border: 2px solid rgba(255,255,255,0.25);
+  /* un-rotate content */
+  line-height: 1;
+}
+
+/* Un-rotate the text/emoji inside the rotated diamond */
+.disaster-dot::after {
+  transform: rotate(-45deg);
+}
+
+.disaster-marker-pulse .disaster-ring {
+  animation: disaster-pulse-ring 1.8s ease-out infinite;
+}
+
+.disaster-marker-selected .disaster-dot {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+  border-color: #3b82f6;
+}
