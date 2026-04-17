@@ -27,7 +27,7 @@ export default function SearchInput({ value, onChange, placeholder = 'Search loc
         defaultValue={value}
         onChange={handleChange}
         placeholder={placeholder}
-        className="pl-8 pr-3 py-1.5 bg-bg-tertiary border border-border rounded-lg text-xs text-text-primary placeholder-text-muted focus:outline-none focus:border-accent transition-colors w-48"
+        className="pl-7 pr-2 py-1.5 bg-bg-tertiary border border-border rounded-lg text-xs text-text-primary placeholder-text-muted focus:outline-none focus:border-accent transition-colors w-28 sm:w-44"
       />
     </div>
   );

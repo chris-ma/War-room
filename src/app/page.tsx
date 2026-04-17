@@ -100,7 +100,7 @@ export default function HomePage() {
   const anyError = conflictError ?? disasterError;
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="flex flex-col" style={{ height: '100dvh' }}>
       <TopBar
         filters={filters}
         onQueryChange={setQuery}

@@ -20,7 +20,7 @@ interface TopBarProps {
 }
 
 function formatTime(d: Date): string {
-  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
 export default function TopBar({
@@ -35,51 +35,39 @@ export default function TopBar({
   onRefresh,
 }: TopBarProps) {
   return (
-    <div className="flex items-center gap-3 px-4 py-2.5 border-b border-border bg-bg-secondary flex-wrap">
-      {/* Logo */}
-      <div className="flex items-center gap-2 flex-shrink-0">
-        <div className="w-2 h-2 rounded-full bg-breaking animate-pulse" />
-        <span className="text-text-primary font-bold text-sm tracking-wide uppercase">War Room</span>
+    <div className="flex-shrink-0 border-b border-border bg-bg-secondary">
+      {/* Row 1: Logo + status + refresh */}
+      <div className="flex items-center gap-2 px-3 py-1.5">
+        <div className="flex items-center gap-1.5 flex-shrink-0">
+          <div className="w-2 h-2 rounded-full bg-breaking animate-pulse" />
+          <span className="text-text-primary font-bold text-xs tracking-wide uppercase">War Room</span>
+        </div>
+        <div className="flex-1" />
+        <div className="flex items-center gap-2 text-[10px] text-text-muted">
+          {isLoading ? (
+            <Spinner size={10} />
+          ) : (
+            <span className="text-text-secondary font-medium">{eventCount} events</span>
+          )}
+          {lastUpdated && <span className="hidden sm:inline">{formatTime(lastUpdated)}</span>}
+          <button
+            onClick={onRefresh}
+            disabled={isLoading}
+            className="px-1.5 py-0.5 rounded bg-bg-tertiary hover:bg-border transition-colors disabled:opacity-50 text-text-secondary hover:text-text-primary text-sm"
+            title="Refresh"
+          >
+            ↻
+          </button>
+        </div>
       </div>
 
-      <div className="h-4 w-px bg-border hidden sm:block" />
-
-      {/* Layer toggle */}
-      <LayerToggle value={activeLayer} onChange={onLayerChange} />
-
-      <div className="h-4 w-px bg-border hidden sm:block" />
-
-      {/* Search */}
-      <SearchInput value={filters.query} onChange={onQueryChange} />
-
-      {/* Time range — only relevant for conflict layer */}
-      {activeLayer !== 'disaster' && (
-        <TimeRangeSelector value={filters.timeRange} onChange={onTimeRangeChange} />
-      )}
-
-      {/* Spacer */}
-      <div className="flex-1" />
-
-      {/* Status */}
-      <div className="flex items-center gap-3 text-xs text-text-muted">
-        {isLoading ? (
-          <Spinner size={12} />
-        ) : (
-          <span className="text-text-secondary font-medium">
-            {eventCount} event{eventCount !== 1 ? 's' : ''}
-          </span>
+      {/* Row 2: Controls */}
+      <div className="flex items-center gap-2 px-3 pb-1.5 overflow-x-auto scrollbar-none">
+        <LayerToggle value={activeLayer} onChange={onLayerChange} />
+        <SearchInput value={filters.query} onChange={onQueryChange} placeholder="Search…" />
+        {activeLayer !== 'disaster' && (
+          <TimeRangeSelector value={filters.timeRange} onChange={onTimeRangeChange} />
         )}
-        {lastUpdated && (
-          <span>Updated {formatTime(lastUpdated)}</span>
-        )}
-        <button
-          onClick={onRefresh}
-          disabled={isLoading}
-          className="px-2 py-1 rounded bg-bg-tertiary hover:bg-border transition-colors disabled:opacity-50 text-text-secondary hover:text-text-primary"
-          title="Refresh"
-        >
-          ↻
-        </button>
       </div>
     </div>
   );
