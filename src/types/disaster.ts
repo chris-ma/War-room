@@ -48,4 +48,3 @@ export const DISASTER_CONFIG: Record<DisasterSubtype, { color: string; emoji: st
   epidemic:     { color: '#22c55e', emoji: '🦠', label: 'Epidemic/Outbreak' },
 };
 
-export type ActiveLayer = 'conflict' | 'disaster' | 'both';

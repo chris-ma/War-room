@@ -1,14 +1,9 @@
 import dynamic from 'next/dynamic';
-import type { ClusteredEvent } from '@/types/event';
-import type { DisasterEvent, ActiveLayer } from '@/types/disaster';
+import type { DisasterEvent } from '@/types/disaster';
 
 interface MapWrapperProps {
-  events: ClusteredEvent[];
   disasterEvents: DisasterEvent[];
-  activeLayer: ActiveLayer;
-  selectedEventId: string | null;
   selectedDisasterId: string | null;
-  onMarkerClick: (event: ClusteredEvent) => void;
   onDisasterClick: (event: DisasterEvent) => void;
   drawerOpen: boolean;
 }
