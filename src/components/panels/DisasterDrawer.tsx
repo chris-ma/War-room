@@ -24,89 +24,91 @@ function formatDate(iso: string): string {
   });
 }
 
+const ALERT_COLOR: Record<string, string> = {
+  red: '#ff3300', orange: '#ff8c00', yellow: '#d4aa00', green: '#44ff66',
+};
+
+const mono = { fontFamily: "'Share Tech Mono', monospace" };
+
+function DataRow({ label, value, valueColor }: { label: string; value: React.ReactNode; valueColor?: string }) {
+  return (
+    <div className="flex justify-between items-center py-1 px-4 text-[11px]"
+         style={{ borderBottom: '1px solid #0c1f10', ...mono }}>
+      <span style={{ color: '#3a6828', letterSpacing: '0.08em' }}>{label}</span>
+      <span style={{ color: valueColor ?? '#b8f040' }}>{value}</span>
+    </div>
+  );
+}
+
 export default function DisasterDrawer({ event, articles, isLoading, error, onClose }: DisasterDrawerProps) {
   const isOpen = event !== null;
+  const cfg = event ? DISASTER_CONFIG[event.disasterType] : null;
 
   return (
     <div
-      className={`drawer-panel fixed top-0 right-0 h-full w-full sm:w-[380px] bg-bg-secondary border-l border-border z-[1100] flex flex-col shadow-2xl ${isOpen ? 'open' : ''}`}
+      className={`drawer-panel fixed top-0 right-0 h-full w-full sm:w-[380px] z-[1100] flex flex-col ${isOpen ? 'open' : ''}`}
+      style={{ background: '#06100a', borderLeft: `2px solid ${cfg?.color ?? '#1a4a22'}`, ...mono }}
     >
-      {event ? (
+      {event && cfg ? (
         <>
+          {/* Coloured header stripe */}
+          <div className="h-0.5" style={{ background: cfg.color, boxShadow: `0 0 12px ${cfg.color}` }} />
+
           {/* Header */}
-          <div className="flex items-start justify-between gap-3 p-4 border-b border-border">
+          <div className="flex items-start justify-between gap-3 p-4"
+               style={{ borderBottom: '1px solid #1a4a22' }}>
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-lg">{DISASTER_CONFIG[event.disasterType].emoji}</span>
-                <span
-                  className="text-xs font-bold uppercase tracking-wide"
-                  style={{ color: DISASTER_CONFIG[event.disasterType].color }}
-                >
-                  {DISASTER_CONFIG[event.disasterType].label}
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-base">{cfg.emoji}</span>
+                <span className="text-[10px] font-bold tracking-widest"
+                      style={{ color: cfg.color, letterSpacing: '0.2em' }}>
+                  ── {cfg.label.toUpperCase()} ──
                 </span>
                 <Badge state={getMarkerState(event.date)} />
               </div>
-              <h2 className="text-text-primary font-semibold text-sm mt-1 leading-snug">{event.title}</h2>
-              <p className="text-text-muted text-[11px] mt-0.5">{formatDate(event.date)}</p>
+              <div className="text-[11px] leading-snug" style={{ color: '#b8f040' }}>{event.title}</div>
+              <div className="text-[10px] mt-0.5" style={{ color: '#3a6828' }}>{formatDate(event.date)}</div>
             </div>
             <button
               onClick={onClose}
-              className="flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-full hover:bg-bg-tertiary text-text-muted hover:text-text-primary transition-colors text-lg"
+              className="flex-shrink-0 px-2 py-1 text-sm transition-colors"
+              style={{ border: '1px solid #1a4a22', color: '#3a6828', background: '#06100a' }}
+              onMouseEnter={e => (e.currentTarget.style.color = '#ff3300')}
+              onMouseLeave={e => (e.currentTarget.style.color = '#3a6828')}
               aria-label="Close"
             >
-              ×
+              ✕
             </button>
           </div>
 
-          {/* Event details */}
-          <div className="px-4 py-3 border-b border-border space-y-1.5">
-            {event.magnitude != null && (
-              <div className="flex justify-between text-xs">
-                <span className="text-text-muted">Magnitude</span>
-                <span className="text-text-primary font-semibold">
-                  {event.magnitude.toFixed(1)} {event.magnitudeUnit ?? ''}
-                </span>
-              </div>
-            )}
-            {event.depth != null && (
-              <div className="flex justify-between text-xs">
-                <span className="text-text-muted">Depth</span>
-                <span className="text-text-primary">{event.depth.toFixed(0)} km</span>
-              </div>
-            )}
-            {event.alertLevel && (
-              <div className="flex justify-between text-xs">
-                <span className="text-text-muted">Alert Level</span>
-                <span
-                  className="font-semibold capitalize"
-                  style={{ color: event.alertLevel === 'red' ? '#ef4444' : event.alertLevel === 'orange' ? '#f97316' : event.alertLevel === 'yellow' ? '#eab308' : '#22c55e' }}
-                >
-                  {event.alertLevel}
-                </span>
-              </div>
-            )}
-            <div className="flex justify-between text-xs">
-              <span className="text-text-muted">Location</span>
-              <span className="text-text-primary text-right max-w-[180px]">
-                {event.lat.toFixed(3)}°, {event.lng.toFixed(3)}°
-              </span>
-            </div>
-            <div className="flex justify-between text-xs">
-              <span className="text-text-muted">Source</span>
-              <a
-                href={event.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-accent hover:underline uppercase"
-              >
-                {event.source}
-              </a>
-            </div>
+          {/* Section label */}
+          <div className="px-4 py-1 text-[9px] tracking-widest"
+               style={{ color: '#d4aa00', borderBottom: '1px solid #1a4a22', letterSpacing: '0.2em' }}>
+            ── INCIDENT DATA ──
           </div>
 
-          {/* Related articles */}
-          <div className="px-4 py-2 border-b border-border">
-            <p className="text-text-muted text-[10px] uppercase tracking-wide font-semibold">Related News</p>
+          {/* Data rows */}
+          {event.magnitude != null && (
+            <DataRow label="MAGNITUDE" value={`${event.magnitude.toFixed(1)} ${event.magnitudeUnit ?? ''}`} valueColor={cfg.color} />
+          )}
+          {event.depth != null && (
+            <DataRow label="DEPTH" value={`${event.depth.toFixed(0)} KM`} />
+          )}
+          {event.alertLevel && (
+            <DataRow label="ALERT" value={event.alertLevel.toUpperCase()} valueColor={ALERT_COLOR[event.alertLevel]} />
+          )}
+          <DataRow label="COORDS" value={`${event.lat.toFixed(3)}° ${event.lng.toFixed(3)}°`} />
+          <DataRow label="SOURCE" value={
+            <a href={event.url} target="_blank" rel="noopener noreferrer"
+               style={{ color: '#44ff66', textDecoration: 'underline' }}>
+              {event.source.toUpperCase()}
+            </a>
+          } />
+
+          {/* Intel feed */}
+          <div className="px-4 py-1 text-[9px] tracking-widest mt-1"
+               style={{ color: '#d4aa00', borderBottom: '1px solid #1a4a22', borderTop: '1px solid #1a4a22', letterSpacing: '0.2em' }}>
+            ── INTEL FEED ──
           </div>
 
           <div className="flex-1 overflow-y-auto">
@@ -119,12 +121,12 @@ export default function DisasterDrawer({ event, articles, isLoading, error, onCl
               <div className="p-4"><ErrorBanner message={error} /></div>
             )}
             {!isLoading && !error && articles.length === 0 && (
-              <div className="p-6 text-center text-text-muted text-sm">
-                No related articles found.
+              <div className="p-6 text-center text-[11px]" style={{ color: '#3a6828' }}>
+                NO INTEL AVAILABLE FOR THIS SECTOR
               </div>
             )}
             {!isLoading && articles.length > 0 && (
-              <div className="p-3 space-y-2">
+              <div className="p-2 space-y-1.5">
                 {articles.map((a, i) => (
                   <ArticleCard key={a.url + i} article={a} />
                 ))}
@@ -133,8 +135,9 @@ export default function DisasterDrawer({ event, articles, isLoading, error, onCl
           </div>
         </>
       ) : (
-        <div className="flex items-center justify-center h-full text-text-muted text-sm px-6 text-center">
-          Click a disaster marker to view event details and related news.
+        <div className="flex items-center justify-center h-full text-[11px] px-6 text-center"
+             style={{ color: '#3a6828' }}>
+          SELECT TARGET ON TACTICAL DISPLAY
         </div>
       )}
     </div>

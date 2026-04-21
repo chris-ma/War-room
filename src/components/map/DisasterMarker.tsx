@@ -14,15 +14,13 @@ interface DisasterMarkerProps {
 
 function buildDisasterIcon(event: DisasterEvent, selected: boolean): L.DivIcon {
   const cfg = DISASTER_CONFIG[event.disasterType];
-  const state = getMarkerState(event.date);
-  const isPulsing = state === 'breaking';
   const selectedClass = selected ? ' disaster-marker-selected' : '';
-  const pulseClass = isPulsing ? ' disaster-marker-pulse' : '';
   const mag = event.magnitude != null ? event.magnitude.toFixed(1) : '';
 
   return L.divIcon({
     className: '',
-    html: `<div class="disaster-marker${selectedClass}${pulseClass}" style="--disaster-color:${cfg.color}">
+    html: `<div class="disaster-marker${selectedClass}" style="--disaster-color:${cfg.color}">
+             <div class="disaster-ring-outer"></div>
              <div class="disaster-ring"></div>
              <div class="disaster-dot">${mag || cfg.emoji}</div>
            </div>`,
@@ -48,10 +46,10 @@ export default function DisasterMarker({ event, isSelected, onClick }: DisasterM
       zIndexOffset={isSelected ? 1000 : state === 'breaking' ? 500 : 0}
       eventHandlers={{ click: () => onClick(event) }}
     >
-      <Tooltip direction="top" offset={[0, -12]} opacity={0.95}>
-        <div style={{ background: '#1f2937', color: '#f9fafb', padding: '6px 10px', borderRadius: 6, fontSize: 12, maxWidth: 220 }}>
-          <div style={{ fontWeight: 700, marginBottom: 2 }}>{event.title}</div>
-          <div style={{ color: '#9ca3af', fontSize: 11 }}>{subtitle} · {state}</div>
+      <Tooltip direction="top" offset={[0, -12]} opacity={1}>
+        <div style={{ background: '#06100a', color: '#b8f040', padding: '6px 10px', border: `1px solid ${cfg.color}`, fontSize: 11, maxWidth: 220, fontFamily: "'Share Tech Mono', monospace", borderRadius: 0 }}>
+          <div style={{ color: cfg.color, fontWeight: 700, marginBottom: 2, fontSize: 10, letterSpacing: '0.1em' }}>{cfg.label.toUpperCase()} · {state.toUpperCase()}</div>
+          <div style={{ lineHeight: 1.4 }}>{event.title}</div>
         </div>
       </Tooltip>
     </Marker>
