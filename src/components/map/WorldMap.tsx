@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
+import * as L from 'leaflet';
 import type { DisasterEvent } from '@/types/disaster';
 import DisasterMarker from './DisasterMarker';
 import MapLegend from './MapLegend';
@@ -27,6 +28,25 @@ function MapResizer({ drawerOpen }: { drawerOpen: boolean }) {
   return null;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function clusterIcon(cluster: any): L.DivIcon {
+  const count = cluster.getChildCount();
+  const color = count >= 50 ? '#ff3300' : count >= 10 ? '#d4aa00' : '#44ff66';
+  const size  = count >= 50 ? 52 : count >= 10 ? 44 : 36;
+  const inner = size - 14;
+
+  return L.divIcon({
+    className: '',
+    html: `<div class="cc-cluster" style="width:${size}px;height:${size}px;--cc:${color}">
+             <div class="cc-ring"></div>
+             <div class="cc-ring cc-ring-2"></div>
+             <div class="cc-core" style="width:${inner}px;height:${inner}px">${count}</div>
+           </div>`,
+    iconSize:   [size, size],
+    iconAnchor: [size / 2, size / 2],
+  });
+}
+
 export default function WorldMap({
   disasterEvents,
   selectedDisasterId,
@@ -40,7 +60,7 @@ export default function WorldMap({
         zoom={2}
         minZoom={2}
         maxZoom={12}
-        style={{ width: '100%', height: '100%', background: '#0a0e1a' }}
+        style={{ width: '100%', height: '100%', background: '#020804' }}
         zoomControl={true}
         attributionControl={true}
       >
@@ -57,6 +77,7 @@ export default function WorldMap({
           spiderfyOnMaxZoom={true}
           showCoverageOnHover={false}
           zoomToBoundsOnClick={true}
+          iconCreateFunction={clusterIcon}
         >
           {disasterEvents.map((event) => (
             <DisasterMarker
