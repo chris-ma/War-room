@@ -198,6 +198,12 @@ body::after {
   animation: crisis-dot-glow 2.2s ease-in-out infinite;
 }
 
+/* ── Ticker bar scroll ── */
+@keyframes ticker-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
 .disaster-marker-selected .disaster-dot {
   box-shadow: 0 0 0 3px rgba(68,255,102,0.6) !important;
   border-color: #44ff66;

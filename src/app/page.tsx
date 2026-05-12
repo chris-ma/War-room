@@ -10,6 +10,7 @@ import { useNotifications } from '@/hooks/useNotifications';
 import TopBar from '@/components/filters/TopBar';
 import FilterBar from '@/components/filters/FilterBar';
 import DisasterDrawer from '@/components/panels/DisasterDrawer';
+import TickerBar from '@/components/ui/TickerBar';
 
 const MapWrapper = dynamic(() => import('@/components/map/MapWrapper'), {
   ssr: false,
@@ -116,6 +117,8 @@ export default function HomePage() {
           onClose={handleDisasterClose}
         />
       </div>
+
+      <TickerBar events={filteredEvents} onEventClick={handleDisasterClick} />
     </div>
   );
 }
