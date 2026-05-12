@@ -2,12 +2,13 @@ import { NextResponse } from 'next/server';
 import { fetchUsgsEarthquakes } from '@/lib/usgs';
 import { fetchEonetEvents } from '@/lib/eonet';
 import { fetchEpidemicEvents } from '@/lib/epidemic';
+import { fetchNoaaAlerts } from '@/lib/noaa';
 import { cacheGet, cacheSet, cacheGetStale } from '@/lib/cache';
 import type { DisastersApiResponse } from '@/types/disaster';
 
 export const maxDuration = 15;
 
-const CACHE_KEY = 'disasters:v2';
+const CACHE_KEY = 'disasters:v3';
 const CACHE_TTL_MS = 5 * 60_000;
 
 export async function GET() {
@@ -15,18 +16,20 @@ export async function GET() {
   if (cached) return NextResponse.json(cached);
 
   try {
-    const [usgsResult, eonetResult, epidemicResult] = await Promise.allSettled([
+    const [usgsResult, eonetResult, epidemicResult, noaaResult] = await Promise.allSettled([
       fetchUsgsEarthquakes(),
       fetchEonetEvents(),
       fetchEpidemicEvents(),
+      fetchNoaaAlerts(),
     ]);
 
     const usgsEvents     = usgsResult.status     === 'fulfilled' ? usgsResult.value     : [];
     const eonetEvents    = eonetResult.status     === 'fulfilled' ? eonetResult.value    : [];
     const epidemicEvents = epidemicResult.status  === 'fulfilled' ? epidemicResult.value : [];
+    const noaaEvents     = noaaResult.status      === 'fulfilled' ? noaaResult.value     : [];
 
     const seen = new Set<string>();
-    const events = [...usgsEvents, ...eonetEvents, ...epidemicEvents].filter((e) => {
+    const events = [...usgsEvents, ...eonetEvents, ...epidemicEvents, ...noaaEvents].filter((e) => {
       if (seen.has(e.id)) return false;
       seen.add(e.id);
       return true;
@@ -38,6 +41,7 @@ export async function GET() {
     if (usgsResult.status     === 'fulfilled') sources.push('usgs');
     if (eonetResult.status    === 'fulfilled') sources.push('eonet');
     if (epidemicResult.status === 'fulfilled') sources.push('gdelt-epidemic');
+    if (noaaResult.status     === 'fulfilled') sources.push('noaa');
 
     const response: DisastersApiResponse = {
       events,

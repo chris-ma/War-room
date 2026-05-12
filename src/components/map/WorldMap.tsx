@@ -6,6 +6,7 @@ import MarkerClusterGroup from 'react-leaflet-cluster';
 import * as L from 'leaflet';
 import type { DisasterEvent } from '@/types/disaster';
 import DisasterMarker from './DisasterMarker';
+import HeatLayer from './HeatLayer';
 import MapLegend from './MapLegend';
 import 'leaflet/dist/leaflet.css';
 
@@ -14,6 +15,7 @@ interface WorldMapProps {
   selectedDisasterId: string | null;
   onDisasterClick: (event: DisasterEvent) => void;
   drawerOpen: boolean;
+  showHeatMap: boolean;
 }
 
 function MapResizer({ drawerOpen }: { drawerOpen: boolean }) {
@@ -52,6 +54,7 @@ export default function WorldMap({
   selectedDisasterId,
   onDisasterClick,
   drawerOpen,
+  showHeatMap,
 }: WorldMapProps) {
   return (
     <div className="relative w-full h-full">
@@ -71,6 +74,7 @@ export default function WorldMap({
           maxZoom={19}
         />
         <MapResizer drawerOpen={drawerOpen} />
+        <HeatLayer events={disasterEvents} visible={showHeatMap} />
         <MarkerClusterGroup
           chunkedLoading
           maxClusterRadius={50}
