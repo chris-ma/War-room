@@ -28,14 +28,13 @@ function timeAgo(isoDate: string): string {
   const hr  = Math.floor(min / 60);
   const day = Math.floor(hr / 24);
   if (min < 1)  return 'NOW';
-  if (min < 60) return `${min}m AGO`;
-  if (hr < 24)  return `${hr}h AGO`;
-  return `${day}d AGO`;
+  if (min < 60) return `${min}m`;
+  if (hr < 24)  return `${hr}h`;
+  return `${day}d`;
 }
 
 function locationFrom(ev: DisasterEvent): string {
   if (ev.country) return ev.country.toUpperCase();
-  // Extract country/region from end of title (after last comma)
   const parts = ev.title.split(',');
   if (parts.length > 1) return parts[parts.length - 1].trim().toUpperCase().slice(0, 24);
   return '';
@@ -76,44 +75,27 @@ function TickerItem({ ev, onEventClick }: { ev: DisasterEvent; onEventClick: (e:
       onMouseEnter={(e) => { e.currentTarget.style.background = '#0c1f10'; }}
       onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
     >
-      {/* State dot */}
       <span style={{ color: dotColor, fontSize: 8, flexShrink: 0 }}>◆</span>
-
-      {/* Disaster type */}
       <span style={{ color: cfg.color, fontWeight: 700, letterSpacing: '0.1em', fontSize: 10 }}>
         {cfg.emoji} {cfg.label.toUpperCase()}
       </span>
-
-      {/* Divider */}
       <span style={{ color: '#1a4a22' }}>◈</span>
-
-      {/* Severity */}
       {severity && (
         <>
-          <span style={{ color: severity.color, fontWeight: 700, fontSize: 10 }}>
-            {severity.text}
-          </span>
+          <span style={{ color: severity.color, fontWeight: 700, fontSize: 10 }}>{severity.text}</span>
           <span style={{ color: '#1a4a22' }}>◈</span>
         </>
       )}
-
-      {/* Location */}
       {location && (
         <>
           <span style={{ color: '#6aaa30', fontSize: 10 }}>{location}</span>
           <span style={{ color: '#1a4a22' }}>◈</span>
         </>
       )}
-
-      {/* Title snippet */}
       <span style={{ color: '#b8f040', fontSize: 10 }}>
         {ev.title.length > 50 ? ev.title.slice(0, 50) + '…' : ev.title}
       </span>
-
-      {/* Time */}
       <span style={{ color: '#3a6828', fontSize: 9, marginLeft: 4 }}>{timeAgo(ev.date)}</span>
-
-      {/* Separator */}
       <span style={{ color: '#1a4a22', marginLeft: 12, fontSize: 11 }}>│</span>
     </button>
   );
@@ -121,7 +103,8 @@ function TickerItem({ ev, onEventClick }: { ev: DisasterEvent; onEventClick: (e:
 
 export default function TickerBar({ events, onEventClick }: TickerBarProps) {
   const items = events.slice(0, 80);
-  const duration = events.length === 0 ? 0 : Math.max(30, Math.min(180, items.length * 5));
+  // Fast scroll: ~1s per item, min 10s, max 40s
+  const duration = events.length === 0 ? 0 : Math.max(10, Math.min(40, items.length * 1));
 
   return (
     <div
@@ -134,7 +117,6 @@ export default function TickerBar({ events, onEventClick }: TickerBarProps) {
         boxShadow: '0 -4px 20px rgba(0,0,0,0.6)',
       }}
     >
-      {/* Left label pin */}
       <div
         className="absolute left-0 top-0 bottom-0 z-10 flex items-center gap-1.5 px-2"
         style={{
@@ -151,7 +133,6 @@ export default function TickerBar({ events, onEventClick }: TickerBarProps) {
         LIVE FEED
       </div>
 
-      {/* Scrolling content */}
       <div className="absolute inset-0" style={{ left: 72, overflow: 'hidden' }}>
         {events.length === 0 ? (
           <div

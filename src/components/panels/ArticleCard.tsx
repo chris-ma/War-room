@@ -15,41 +15,60 @@ function formatAge(dateStr: string): string {
   }
 }
 
+const mono = { fontFamily: "'Share Tech Mono', monospace" };
+
 export default function ArticleCard({ article }: { article: EnrichedArticle }) {
-  const age = formatAge(article.publishedAt ?? article.seendate);
-  const image = article.urlToImage ?? article.socialimage;
+  const age    = formatAge(article.publishedAt ?? article.seendate ?? '');
+  const source = article.source?.name ?? article.domain ?? '';
 
   return (
     <a
       href={article.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex gap-3 p-3 rounded-lg border border-border hover:border-accent/50 hover:bg-bg-tertiary transition-colors group"
+      className="block p-3 transition-all"
+      style={{
+        background: '#020804',
+        border: '1px solid #1a4a22',
+        ...mono,
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = '#44ff66';
+        e.currentTarget.style.background  = '#06100a';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = '#1a4a22';
+        e.currentTarget.style.background  = '#020804';
+      }}
     >
-      {image && (
-        <div className="flex-shrink-0 w-16 h-12 rounded overflow-hidden bg-bg-tertiary">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={image}
-            alt=""
-            className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
-            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-          />
+      {/* Headline */}
+      <div
+        className="text-[11px] leading-snug mb-2"
+        style={{ color: '#b8f040' }}
+      >
+        {article.title}
+      </div>
+
+      {/* Footer row */}
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2 text-[9px] min-w-0">
+          {source && (
+            <span
+              className="truncate"
+              style={{ color: '#6aaa30', letterSpacing: '0.06em' }}
+            >
+              {source.toUpperCase()}
+            </span>
+          )}
+          {source && age && <span style={{ color: '#1a4a22' }}>·</span>}
+          {age && <span style={{ color: '#3a6828' }}>{age}</span>}
         </div>
-      )}
-      <div className="flex-1 min-w-0">
-        <p className="text-text-primary text-xs font-medium leading-snug line-clamp-2 group-hover:text-accent transition-colors">
-          {article.title}
-        </p>
-        {article.description && (
-          <p className="text-text-muted text-[11px] mt-1 line-clamp-1">{article.description}</p>
-        )}
-        <div className="flex items-center gap-2 mt-1.5 text-[10px] text-text-muted">
-          <span className="font-medium text-text-secondary truncate max-w-[120px]">
-            {article.source?.name ?? article.domain}
-          </span>
-          {age && <><span>·</span><span>{age}</span></>}
-        </div>
+        <span
+          className="flex-shrink-0 text-[9px] tracking-widest"
+          style={{ color: '#44ff66', letterSpacing: '0.15em' }}
+        >
+          READ ▶
+        </span>
       </div>
     </a>
   );

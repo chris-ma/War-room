@@ -16,7 +16,7 @@ export async function fetchGdeltArtList(
   timespanMinutes = 720,
   maxRecords = 20
 ): Promise<import('@/types/gdelt').GdeltArticle[]> {
-  const query = `disaster outbreak emergency ${location}`;
+  const query = `"${location}" disaster OR emergency OR outbreak OR warning`;
   const url = `${BASE}?query=${encodeURIComponent(query)}&mode=ArtList&format=json&timespan=${timespanMinutes}&maxrecords=${maxRecords}&sort=DateDesc`;
   const res = await fetch(url, { next: { revalidate: 0 } });
   if (!res.ok) throw new Error(`GDELT artlist error: ${res.status}`);
