@@ -71,7 +71,7 @@ export default function HomePage() {
   }, [clearArticles]);
 
   return (
-    <div className="flex flex-col" style={{ height: '100dvh' }}>
+    <div className="flex flex-col h-full">
       <TopBar
         eventCount={filteredEvents.length}
         lastUpdated={lastUpdated}

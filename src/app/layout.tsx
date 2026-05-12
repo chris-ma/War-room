@@ -13,7 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="flex flex-col bg-bg-primary text-text-primary antialiased" style={{ height: '100dvh' }}>
+      <body className="flex flex-col bg-bg-primary text-text-primary antialiased overflow-hidden" style={{ height: '100dvh' }}>
         {children}
       </body>
     </html>
