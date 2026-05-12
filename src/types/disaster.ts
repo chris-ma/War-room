@@ -22,7 +22,7 @@ export interface DisasterEvent {
   magnitude?: number;
   magnitudeUnit?: string;
   alertLevel?: 'green' | 'yellow' | 'orange' | 'red';
-  source: 'usgs' | 'eonet' | 'gdelt';
+  source: 'usgs' | 'eonet' | 'gdelt' | 'noaa';
   url?: string;
   country?: string;
   depth?: number;        // km, earthquakes only

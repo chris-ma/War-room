@@ -6,6 +6,7 @@ interface MapWrapperProps {
   selectedDisasterId: string | null;
   onDisasterClick: (event: DisasterEvent) => void;
   drawerOpen: boolean;
+  showHeatMap: boolean;
 }
 
 const WorldMap = dynamic(() => import('./WorldMap'), {

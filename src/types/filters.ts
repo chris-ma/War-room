@@ -1,17 +1,14 @@
-import type { MarkerState } from './event';
+import type { DisasterSubtype } from './disaster';
 
-export type TimeRange = '1h' | '6h' | '24h' | '7d';
+export type TimeRange = '24h' | '7d' | '30d';
 
-export interface FilterState {
-  query: string;
-  timeRange: TimeRange;
-  regions: string[];
-  states: MarkerState[];
-}
-
-export const TIME_RANGE_MINUTES: Record<TimeRange, number> = {
-  '1h': 60,
-  '6h': 360,
-  '24h': 1440,
-  '7d': 10080,
+export const TIME_RANGE_HOURS: Record<TimeRange, number> = {
+  '24h': 24,
+  '7d':  7 * 24,
+  '30d': 30 * 24,
 };
+
+export const ALL_DISASTER_TYPES: DisasterSubtype[] = [
+  'earthquake', 'wildfire', 'flood', 'cyclone', 'volcano',
+  'landslide', 'tsunami', 'severe_storm', 'drought', 'epidemic',
+];
